@@ -8,8 +8,11 @@ public class DeckManager : MonoBehaviour
 {
     public List<Carta> deck = new List<Carta>();
 
+    private Dictionary<string, Sprite> diccionarioSprites;
+
     private void Awake()
     {
+        CargarSprites();
         GenerarBaraja(); 
     } 
 
@@ -25,6 +28,18 @@ public class DeckManager : MonoBehaviour
     }
 
 
+    void CargarSprites()
+    {
+        diccionarioSprites = new Dictionary<string, Sprite>();
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Cartas/Sprites");
+
+        foreach (Sprite sprite in sprites)
+        {
+            diccionarioSprites.Add(sprite.name, sprite);
+        }
+    }
+
+    
     public List<Carta>RepartirCartas(int cantidad)
     {
         List<Carta> cartas = new List<Carta>(); 
@@ -54,7 +69,14 @@ public class DeckManager : MonoBehaviour
         {
             foreach (ValorCarta valor in Enum.GetValues(typeof(ValorCarta)))
             {
-                deck.Add(new Carta(tipo, valor));
+                Carta carta = new Carta(tipo, valor);
+                string clave = valor.ToString() + tipo.ToString();
+                if (diccionarioSprites.ContainsKey(clave))
+                {
+                    carta.sprite = diccionarioSprites[clave];
+                }
+                deck.Add(carta);
+                
             }
         }
         BarajarDeck();

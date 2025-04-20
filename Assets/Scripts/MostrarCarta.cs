@@ -1,18 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI; 
 
-public class MostrarCarta : MonoBehaviour
+public class MostrarCarta : MonoBehaviour, IPointerClickHandler
 {
-    public Carta carta; 
-    void Start()
+    public Carta carta;
+    public Image image;
+    public void OnPointerClick(PointerEventData eventData)
     {
-        
+        ToggleSelection();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ToggleSelection()
     {
+        carta.isSelected = !carta.isSelected;
+
+        if (carta.isSelected)
+        {
+            image.color = Color.yellow;
+        }
+        else
+        {
+            image.color = Color.white; 
+        }
         
     }
+    
 }

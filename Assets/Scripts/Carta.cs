@@ -7,7 +7,8 @@ public class Carta
 {
     public TipoCarta tipoCarta;
     public ValorCarta valorCarta;
-
+    public Sprite sprite;
+    public bool isSelected;
 
     public Carta(TipoCarta tipoCarta, ValorCarta valorCarta)
     {
