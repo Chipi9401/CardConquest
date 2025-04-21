@@ -11,7 +11,12 @@ public class ManoManager : MonoBehaviour
     public Transform holder;
     public GameObject prefabCarta; 
     public DeckManager deckManager;
+    public Transform holderMesa; 
     
+    void Start()
+    {
+        RecibirCartasInicio();
+    }
 
     public void RecibirCartasInicio()
     {
@@ -48,14 +53,37 @@ public class ManoManager : MonoBehaviour
     }
 
 
-    void Start()
+    public void JugarMano()
     {
-        RecibirCartasInicio();
+        List<Carta> cartasSeleccionadas = cartasActuales.FindAll(c =>c.isSelected);
+        CombinacionCartas combinacion = EvaluadorCartas.Evaluar(cartasSeleccionadas);
+        if (combinacion == CombinacionCartas.Ninguna)
+        {
+            Debug.Log("Combinacion no valida");
+
+            foreach (GameObject cartaGo in cartasActualesGO)
+            {
+                MostrarCarta mostrarCarta = cartaGo.GetComponent<MostrarCarta>();
+                if (mostrarCarta.carta.isSelected)
+                {
+                    mostrarCarta.carta.isSelected = false;
+                    mostrarCarta.image.color = Color.white; 
+                }
+            }
+            return; 
+        }
+
+
+        for (int i = 0; i < cartasSeleccionadas.Count; i++)
+        {
+            int indice = cartasActuales.IndexOf(cartasSeleccionadas[i]);
+            GameObject cartaGO = cartasActualesGO[indice];
+            cartaGO.transform.SetParent(holderMesa);
+            cartaGO.GetComponent<Image>().color=Color.white;
+        }
+        cartasActuales.RemoveAll(c => c.isSelected);
+        cartasActualesGO.RemoveAll(go =>go.GetComponent<MostrarCarta>().carta.isSelected);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
 }
