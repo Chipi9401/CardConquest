@@ -62,7 +62,7 @@ public class DeckManager : MonoBehaviour
         }
     }
 
-    void GenerarBaraja()
+    public void GenerarBaraja()
     {
         deck.Clear();
         foreach (TipoCarta tipo in Enum.GetValues(typeof(TipoCarta)))

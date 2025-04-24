@@ -38,7 +38,7 @@ public class PlayerUI : MonoBehaviour
         manoManager.cartasActualesGO.Remove(cartaGO);
         Destroy(cartaGO);
     }
-   manoManager.RecibirCartasAlDescartar(); 
+   manoManager.RecibirCartas(); 
   }
   
 }

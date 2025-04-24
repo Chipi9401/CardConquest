@@ -28,8 +28,8 @@ public static class EvaluadorCartas
         
         int cantidad = cartas.Count; 
         List<int> valores = new List<int>();
-        Dictionary<int, int> conteoValores = new Dictionary<int, int>(); 
-        Dictionary<TipoCarta, int> conteoPalos = new Dictionary<TipoCarta, int>();
+        Dictionary<int, int> conteoValores = new(); 
+        Dictionary<TipoCarta, int> conteoPalos = new();
 
         foreach (Carta carta in cartas)
         {
@@ -50,10 +50,10 @@ public static class EvaluadorCartas
         }
         
         valores.Sort();
-
-        bool escaleraBaja = valores.Contains(14) && valores.Contains(2) && valores.Contains(3) && valores.Contains(4) &&
-                            valores.Contains(5);
-        bool esEscalera = EsEscalera(valores) || escaleraBaja;
+        HashSet<int> valoresUnicos = new(valores);
+        bool escaleraBaja = valoresUnicos.Contains(14) && valoresUnicos.Contains(2) && valoresUnicos.Contains(3) && valoresUnicos.Contains(4) &&
+                            valoresUnicos.Contains(5);
+        bool esEscalera = EsEscalera(valoresUnicos.ToList()) || escaleraBaja;
         bool esColor = conteoPalos.ContainsValue(5); 
         
         //Escalera de color
@@ -72,7 +72,7 @@ public static class EvaluadorCartas
         
         //Full
 
-        if (cantidad == 3 && conteoValores.ContainsValue(3) && conteoValores.ContainsValue(2))
+        if (cantidad == 5 && conteoValores.ContainsValue(3) && conteoValores.ContainsValue(2))
         {
             return CombinacionCartas.Full;
         }
@@ -128,19 +128,30 @@ public static class EvaluadorCartas
         if(valoresCartas.Count < 5) return false; 
         valoresCartas.Sort();
         
-        bool escalera = true; 
-        
-        for (int i = 0; i < valoresCartas.Count; i++)
+        for (int i = 0; i <= valoresCartas.Count - 5; i++)
         {
-            if (valoresCartas[i] == valoresCartas[i + 1])
+            bool escalera = true; 
+            for (int j = 0; j < 4; j++)
+            {
+                if (valoresCartas[ i + j + 1 ] - valoresCartas[i+j] != 1 )
+                {
+                    escalera = false; break;
+                }
+            }  
+            if (escalera)
+            {
+                return true;
+            }
+            /*if (valoresCartas[i] == valoresCartas[i + 1])
             {
                 escalera = true; 
             }
             else
             {
                 escalera = false; break;
-            }
-        } return escalera; 
+            }*/
+         
+        } return false; 
     }
 
     public static int ConvertirValorANumero(ValorCarta valor)
