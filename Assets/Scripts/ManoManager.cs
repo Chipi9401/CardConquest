@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using CardHouse;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ManoManager : MonoBehaviour
 {
+    [Header("Cartas")]
     public List<Carta> cartasActuales;
     public List<GameObject> cartasActualesGO;
     public Transform holder;
@@ -13,11 +15,13 @@ public class ManoManager : MonoBehaviour
     public DeckManager deckManager;
     public Transform holderMesa;
     public Transform holderMesaIA;
+    [Header("Scripts")]
     public ManoManager manoManagerIA;
-    public VidaManager vidaManager;
-    public GameObject botonJugar; 
+    public GameManager gameManager;
     public GameObject panelGameOver;
-
+    public PlayerUI playerUI;
+    public DificultadManager dificultadManager; 
+    
     void Start()
     {
         RecibirCartasInicio();
@@ -78,7 +82,7 @@ public class ManoManager : MonoBehaviour
 
             return;
         }
-
+        playerUI.jugarButton.interactable = false;
 
         for (int i = 0; i < cartasSeleccionadas.Count; i++)
         {
@@ -90,8 +94,7 @@ public class ManoManager : MonoBehaviour
 
         cartasActuales.RemoveAll(c => c.isSelected);
         cartasActualesGO.RemoveAll(go => go.GetComponent<MostrarCarta>().carta.isSelected);
-
-        botonJugar.SetActive(false);
+        
         
         
      
@@ -103,7 +106,7 @@ public class ManoManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         //La IA decide si descartar o no
-        bool descarta = Random.value > 0.5f;
+        bool descarta = dificultadManager.DeberiaDescartar(manoManagerIA.cartasActuales);
         if (descarta)
         {
             List<Carta> cartasADescartar = manoManagerIA.cartasActuales.GetRange(0, Random.Range(1, 8));
@@ -161,9 +164,11 @@ public class ManoManager : MonoBehaviour
         //Prueba combinaciones empezando por cinco cartas hasta 1
         for (int i = 5; i >= 1; i--)
         {
-            if(manoIA.Count< i) continue;
+            if (manoIA.Count < i) continue;
+
+            int intentos = dificultadManager.CalcularIntentos(); 
             //Intenta X combinaciones aleatorias
-            for (int intento = 0; intento < 20; intento++)
+            for (int intento = 0; intento < intentos; intento++)
             {
                 List<Carta> manoIACopia = new List<Carta>(manoIA);
                 List<Carta> cartasSeleccionadasIA = new List<Carta>();
@@ -209,12 +214,12 @@ public class ManoManager : MonoBehaviour
         {
             Debug.Log("El jugador gana el turno");
             int vidaARestar = valorCombinacionJugador - valorCombinacionIA;
-            vidaManager.RestarVida(true, vidaARestar);
+            gameManager.RestarVida(true, vidaARestar);
         } else if (valorCombinacionJugador < valorCombinacionIA)
         {
             Debug.Log("El jugador pierde el turno");
             int vidaARestar = valorCombinacionIA - valorCombinacionJugador;
-            vidaManager.RestarVida(false, vidaARestar);
+            gameManager.RestarVida(false, vidaARestar);
         }
         else
         {
@@ -241,22 +246,28 @@ public class ManoManager : MonoBehaviour
     {
         
         //
-        if(vidaManager.vidaJugador <= 0)
+        if(gameManager.vidaJugador <= 0)
         {
            //Si la vida del jugador es menor o igual que cero se activa el panel gameover
            panelGameOver.SetActive(true);
-        }else if (vidaManager.vidaIA <= 0)
+           LimpiarMesa();
+        }else if (gameManager.vidaIA <= 0)
         {
-            //Si la vida del jugador es menor o igual que cero se pasa al siguiente enemigo
+            //Si la vida de la IA es igual o menor a 0
             LimpiarListaMano();
+            gameManager.ReiniciarIA();
+            gameManager.SumarOro();
+            LimpiarMesa();
+            dificultadManager.RegistrarEnemigoDerrotado();
         }
         else
         {
             LimpiarMesa();
-        
             RecibirCartas();
             manoManagerIA.RecibirCartas();
+            
         }
+        playerUI.ActivarBotones();
     }
 
     [ContextMenu("Limpiar Lista Mano")]

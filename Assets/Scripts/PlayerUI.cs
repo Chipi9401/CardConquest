@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using CardHouse;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
   public ManoManager manoManager;
+  public Button jugarButton;
+  public Button descartarButton;
 
   public void Descartar()
   {
@@ -18,6 +22,11 @@ public class PlayerUI : MonoBehaviour
         }
     }
     manoManager.cartasActuales.RemoveAll(carta=>cartas.Contains(carta));
+
+    if (cartas.Count != 0)
+    {
+        descartarButton.interactable = false; 
+    }
     
     
     List<GameObject> cartasObj = new List<GameObject>();
@@ -40,5 +49,11 @@ public class PlayerUI : MonoBehaviour
     }
    manoManager.RecibirCartas(); 
   }
-  
+
+  public void ActivarBotones()
+  {
+      jugarButton.interactable = true;
+      descartarButton.interactable = true;
+  }
+
 }
