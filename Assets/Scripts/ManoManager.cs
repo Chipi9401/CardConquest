@@ -115,6 +115,7 @@ public class ManoManager : MonoBehaviour
             {
                 int indice = manoManagerIA.cartasActuales.IndexOf(carta);
                 cartasADescartarGO.Add(manoManagerIA.cartasActualesGO[indice]);
+                deckManager.deck.Add(carta);
             }
 
             foreach (GameObject cartaGO in cartasADescartarGO)
@@ -233,16 +234,25 @@ public class ManoManager : MonoBehaviour
     {
         for (int i = holderMesa.childCount - 1; i >= 0; i--)
         {
+            GameObject cartaEnMesa = holderMesa.GetChild(i).gameObject;
+            MostrarCarta mostrarCarta = cartaEnMesa.GetComponent<MostrarCarta>();
+            Carta carta = mostrarCarta.carta;
+            deckManager.deck.Add(carta);
             Destroy(holderMesa.GetChild(i).gameObject);
+            
         }
         for (int i = holderMesaIA.childCount - 1; i >= 0; i--)
         {
+            GameObject cartaEnMesa = holderMesaIA.GetChild(i).gameObject;
+            MostrarCarta mostrarCarta = cartaEnMesa.GetComponent<MostrarCarta>();
+            Carta carta = mostrarCarta.carta;
+            deckManager.deck.Add(carta);
             Destroy(holderMesaIA.GetChild(i).gameObject);
         }
 
     }
 
-    public void ComprobarVidas()
+    public void ComprobarVidas() 
     {
         
         //

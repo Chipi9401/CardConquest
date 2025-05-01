@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
     [Header("Oro")] 
     
     public int oro;
@@ -15,12 +18,27 @@ public class GameManager : MonoBehaviour
     public float vidaJugador = 100f;
     public float vidaIA = 100f;
     
-    float vidaJugadorMax = 100f;
-    float vidaIAMax = 100f;
+    public float vidaJugadorMax = 100f;
+    public float vidaIAMax = 100f;
     
     
     public Image barraVidaJugador;
     public Image barraVidaIA;
+
+    public float multiplicadorDano;
+    public float multiplicadorOroVictoria;
+    public bool bloqueoDano; 
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void RestarVida(bool jugadorGana, float vidaARestar)
     {
@@ -30,7 +48,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (bloqueoDano == true)
+            {
+                return;
+            }
             vidaJugador -= vidaARestar;
+            
         }
         ActualizarBarrasVida();
     }

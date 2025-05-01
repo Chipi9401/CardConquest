@@ -10,6 +10,7 @@ public class PlayerUI : MonoBehaviour
   public ManoManager manoManager;
   public Button jugarButton;
   public Button descartarButton;
+  public DeckManager deckManager;
 
   public void Descartar()
   {
@@ -19,10 +20,12 @@ public class PlayerUI : MonoBehaviour
         if (carta.isSelected)
         {
             cartas.Add(carta);
+            carta.isSelected = false;
+            deckManager.deck.Add(carta);
         }
     }
     manoManager.cartasActuales.RemoveAll(carta=>cartas.Contains(carta));
-
+    
     if (cartas.Count != 0)
     {
         descartarButton.interactable = false; 
