@@ -14,6 +14,7 @@ public class ObjetoTienda
   public int costeObjeto; 
   public string descripcionObjeto;
   public TipoObjeto tipoObjeto;
+  public Sprite spriteObjeto;
 
   public bool haSidoComprado = false; 
 
@@ -35,16 +36,19 @@ public class ObjetoTienda
   public void AplicarDano()
   {
       GameManager.instance.vidaIA -= danoInstantaneo; 
+      Debug.Log("Daño instantaneo");
   }
 
   public void BloquearDano()
   {
       GameManager.instance.bloqueoDano = true;
+      Debug.Log("Bloquear daño");
   }
 
   public void AnadirOro()
   {
       GameManager.instance.oro += anadirOro; 
+      Debug.Log("Añadir oro");
   }
   
 }

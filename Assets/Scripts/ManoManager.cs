@@ -259,16 +259,19 @@ public class ManoManager : MonoBehaviour
         if(gameManager.vidaJugador <= 0)
         {
            //Si la vida del jugador es menor o igual que cero se activa el panel gameover
+           AudioManager.instance.ReproducirClip(AudioManager.instance.gameOver);
            panelGameOver.SetActive(true);
            LimpiarMesa();
         }else if (gameManager.vidaIA <= 0)
         {
             //Si la vida de la IA es igual o menor a 0
+            AudioManager.instance.ReproducirClip(AudioManager.instance.eliminarOponente);
             LimpiarListaMano();
             gameManager.ReiniciarIA();
             gameManager.SumarOro();
             LimpiarMesa();
             dificultadManager.RegistrarEnemigoDerrotado();
+            
         }
         else
         {

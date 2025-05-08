@@ -23,6 +23,15 @@ public class DificultadManager : MonoBehaviour
         enemigosDerrotados++; 
         enemigosDerrotadosText.text = enemigosDerrotados.ToString(); 
         ActualizarDificultad();
+        AbrirTienda();
+    }
+
+    public void AbrirTienda()
+    {
+        if (enemigosDerrotados % 5 == 0)  
+        {
+            GameManager.instance.panelTienda.SetActive(true);
+        }
     }
 
     public void ActualizarDificultad()

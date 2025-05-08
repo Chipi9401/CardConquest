@@ -26,7 +26,7 @@ public class MostrarCarta : MonoBehaviour, IPointerClickHandler
         {
             image.color = Color.white; 
         }
-        
+        AudioManager.instance.ReproducirClip(AudioManager.instance.seleccionarCarta);
     }
     
 }

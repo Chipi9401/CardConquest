@@ -27,7 +27,12 @@ public class GameManager : MonoBehaviour
 
     public float multiplicadorDano;
     public float multiplicadorOroVictoria;
-    public bool bloqueoDano; 
+    public bool bloqueoDano;
+
+    public List<ObjetoTienda> objetosInventario;
+    public Transform panelInventario;
+
+    public GameObject panelTienda; 
     public void Awake()
     {
         if (instance == null)
@@ -45,6 +50,7 @@ public class GameManager : MonoBehaviour
         if (jugadorGana)
         {
             vidaIA -= vidaARestar;
+            AudioManager.instance.ReproducirClip(AudioManager.instance.hacerDano);
         }
         else
         {
@@ -53,9 +59,14 @@ public class GameManager : MonoBehaviour
                 return;
             }
             vidaJugador -= vidaARestar;
-            
+            AudioManager.instance.ReproducirClip(AudioManager.instance.recibirDano);
+
         }
         ActualizarBarrasVida();
+
+        bloqueoDano = false;
+        
+        
     }
 
     public void ActualizarBarrasVida()
@@ -69,7 +80,7 @@ public class GameManager : MonoBehaviour
     {
         vidaIAMax = vidaIAMax + 10;
         vidaIA = vidaIAMax;
-        barraVidaJugador.fillAmount = 1f; 
+        barraVidaIA.fillAmount = 1f; 
     }
 
     public void SumarOro()
